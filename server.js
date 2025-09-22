@@ -19,7 +19,7 @@ app.use(helmet());
 
 // CORS configuration - Update this with your frontend domain
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL || 'https://mrs-co1-git-main-deepma-jaiswals-projects.vercel.app',
   credentials: true
 }));
 
