@@ -40,6 +40,23 @@ app.use('/api/', limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// 🔥 ADD THIS ROOT ROUTE HERE
+app.get('/', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'MRS & Co. Backend API',
+    status: 'Server is running successfully!',
+    endpoints: {
+      'GET /': 'API Information',
+      'GET /api/health': 'Health check',
+      'GET /api/test-email': 'Test email configuration',
+      'POST /api/consultation': 'Submit consultation form (requires: name, email, message)',
+      'POST /api/careers': 'Submit career application (requires: name, email)'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Email transporter setup
 const createTransporter = () => {
 console.log('Creating transporter with:');
@@ -209,6 +226,7 @@ app.get('/api/test-email', async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
