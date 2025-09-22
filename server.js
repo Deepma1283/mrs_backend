@@ -20,10 +20,15 @@ app.use(helmet());
 // CORS configuration - Update this with your frontend domain
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'https://mrs-co1-git-main-deepma-jaiswals-projects.vercel.app',
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Rate limiting
+
+app.set('trust proxy', 1);
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // limit each IP to 10 requests per windowMs
