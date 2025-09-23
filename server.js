@@ -19,7 +19,7 @@ app.use(helmet());
 
 // CORS configuration - Update this with your frontend domain
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://mrs-co1-git-main-deepma-jaiswals-projects.vercel.app',
+  origin: process.env.FRONTEND_URL || 'mrs-co1.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
