@@ -93,28 +93,70 @@ app.get('/', (req, res) => {
 
 // Email transporter setup
 const createTransporter = () => {
-console.log('Creating transporter with:');
+  console.log('Creating transporter with:');
   console.log('EMAIL_USER:', process.env.EMAIL_USER);
   console.log('EMAIL_APP_PASSWORD length:', process.env.EMAIL_APP_PASSWORD?.length);
   console.log('FIRM_EMAIL:', process.env.FIRM_EMAIL);
+  
   return nodemailer.createTransport({
     service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // Use STARTTLS
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_APP_PASSWORD // Use App Password, not regular password
-    }
+      pass: process.env.EMAIL_APP_PASSWORD
+    },
+    // Enhanced timeout settings for Railway deployment
+    connectionTimeout: 60000, // 60 seconds
+    greetingTimeout: 30000,   // 30 seconds  
+    socketTimeout: 60000,     // 60 seconds
+    // TLS configuration for Railway compatibility
+    tls: {
+      rejectUnauthorized: false,
+      ciphers: 'SSLv3'
+    },
+    // Additional settings for better reliability
+    pool: true,
+    maxConnections: 1,
+    rateDelta: 20000,
+    rateLimit: 5
   });
 };
-// Add this test function
 const testEmailConnection = async () => {
   try {
     const transporter = createTransporter();
+    console.log('Testing email connection...');
     await transporter.verify();
     console.log('✅ Email connection successful!');
   } catch (error) {
     console.error('❌ Email connection failed:', error.message);
+    console.error('Full error:', error);
   }
 };
+// const createTransporter = () => {
+// console.log('Creating transporter with:');
+//   console.log('EMAIL_USER:', process.env.EMAIL_USER);
+//   console.log('EMAIL_APP_PASSWORD length:', process.env.EMAIL_APP_PASSWORD?.length);
+//   console.log('FIRM_EMAIL:', process.env.FIRM_EMAIL);
+//   return nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//       user: process.env.EMAIL_USER,
+//       pass: process.env.EMAIL_APP_PASSWORD // Use App Password, not regular password
+//     }
+//   });
+// };
+// Add this test function
+// const testEmailConnection = async () => {
+//   try {
+//     const transporter = createTransporter();
+//     await transporter.verify();
+//     console.log('✅ Email connection successful!');
+//   } catch (error) {
+//     console.error('❌ Email connection failed:', error.message);
+//   }
+// };
 
 // Call it when server starts (add this before app.listen)
 testEmailConnection();
